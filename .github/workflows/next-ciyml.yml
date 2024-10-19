@@ -40,12 +40,16 @@ jobs:
             exit 1
           fi
 
-      # Setup Node.js and pnpm
+      # Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: "20"
-          cache: 'pnpm'
+
+      # Install pnpm
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm
 
       # Cache pnpm and .next/cache
       - name: Restore cache
