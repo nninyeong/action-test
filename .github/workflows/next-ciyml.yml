@@ -89,4 +89,10 @@ jobs:
               pull_number: pull_number,
               title: updated_title,
               state: 'closed'
+            })|
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "🚨 Build failed! Please check the logs and fix the issues before merging."
             })
