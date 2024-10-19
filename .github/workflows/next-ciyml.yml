@@ -72,3 +72,5 @@ jobs:
         if: ${{ failure() }}
         run: |
           gh pr close ${{ github.event.pull_request.number }} -c "빌드 실패로 인해 PR이 닫혔습니다."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
