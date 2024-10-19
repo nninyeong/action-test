@@ -36,7 +36,6 @@ jobs:
             echo "Unable to determine package manager" >&2
             exit 1
           fi
-
       # Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -47,7 +46,6 @@ jobs:
       - name: Install pnpm
         run: |
           npm install -g pnpm
-
       # Cache pnpm and .next/cache
       - name: Restore cache
         uses: actions/cache@v3
@@ -60,7 +58,6 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
-
       # Install dependencies using pnpm
       - name: Install dependencies
         run: pnpm install
@@ -70,24 +67,8 @@ jobs:
         run: pnpm run build
 
       # If the build fails, leave a comment on the PR and request changes
+      # 빌드 실패 시 PR에 코멘트를 남기고 PR을 닫음
       - name: If build fail
         if: ${{ failure() }}
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const pull_number = context.payload.pull_request.number;
-            const updated_title = `[BUILD FAIL] ${context.payload.pull_request.title}`;
-            await github.rest.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pull_number,
-              body: '빌드에 실패했습니다.',
-              event: 'REQUEST_CHANGES'
-            });
-            await github.rest.pulls.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pull_number,
-              title: updated_title
-            });
+        run: |
+          gh pr close ${{ github.event.pull_request.number }} -c "빌드 실패로 인해 PR이 닫혔습니다."
