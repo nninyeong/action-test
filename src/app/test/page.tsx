@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Page = () => {
-    // const test:any = 'hi'
+    const test:any = 'hi'
     return (
         <div>
 
