@@ -91,9 +91,3 @@ jobs:
               pull_number: pull_number,
               title: updated_title
             });
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pull_number,  // PR number is used as issue_number in the API
-              body: "🚨 Build failed! Please check the logs and fix the issues before merging."
-            });
